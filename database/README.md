@@ -4,6 +4,7 @@ This directory contains PostgreSQL database dump files for setting up the Databa
 
 ## 📁 Script Overview
 
+
 | Script | Purpose | Database |
 |--------|---------|----------|
 | `metadata_env.sql` | Creates metadata database schema and structure | `metadata` |
@@ -12,6 +13,8 @@ This directory contains PostgreSQL database dump files for setting up the Databa
 | `dev_seed.sql` | Inserts realistic business data for development | `dev` |
 | `test_env.sql` | Creates test environment schema | `test` |
 | `test_seed.sql` | Inserts test data and edge cases | `test` |
+
+
 
 ## 🚀 Quick Setup (All-in-One)
 

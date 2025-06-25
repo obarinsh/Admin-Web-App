@@ -14,6 +14,7 @@ It solves the problem of database access control by providing a user-friendly in
 ## 📁 Project Structure
 This ensures data integrity while allowing controlled access to database modifications.
 
+```
 ├── backend/                 # FastAPI application
 │   ├── app/
 │   │   ├── main.py         # Application entry point
@@ -33,6 +34,7 @@ This ensures data integrity while allowing controlled access to database modific
 |   ├── `test_seed.sql` | Inserts test data and edge cases | `test` |
 │   └── README.md           # Database setup instructions
 └── README.md               # This overview document
+```
 
 **Components:**
 - **Frontend**: React application for user interaction
