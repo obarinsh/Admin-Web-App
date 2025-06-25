@@ -1,0 +1,124 @@
+/* NavBar.css */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 15px 20px;
+    background-color: #333;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+.navbar-brand:hover {
+    color: #f8f9fa;
+}
+
+.navbar-user-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.navbar-welcome {
+    font-size: 14px;
+    margin: 0;
+    color: #f8f9fa;
+}
+
+.navbar-logout-btn {
+    padding: 8px 16px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 1001;
+    transition: background-color 0.2s ease;
+}
+
+.navbar-logout-btn:hover {
+    background-color: #c82333;
+}
+
+.navbar-logout-btn:active {
+    background-color: #bd2130;
+}
+
+.navbar-not-logged {
+    color: #ccc;
+    font-size: 14px;
+}
+
+/* Environment select dropdown in navbar */
+.navbar-env-select {
+    padding: 6px 10px;
+    font-size: 13px;
+    min-width: 140px;
+    background-color: #444;
+    color: white;
+    border: 1px solid #555;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.navbar-env-select:hover {
+    background-color: #555;
+    border-color: #666;
+}
+
+.navbar-env-select:focus {
+    outline: none;
+    background-color: #555;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.navbar-env-select option {
+    background-color: #444;
+    color: white;
+    padding: 4px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 10px 15px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .navbar-user-section {
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .navbar-env-select {
+        width: 100%;
+        order: -1;
+    }
+
+    .navbar-welcome {
+        font-size: 0.8rem;
+    }
+
+    .navbar-logout-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+}
