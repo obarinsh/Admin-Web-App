@@ -56,7 +56,7 @@ Build a web-based admin panel to interact with multiple PostgreSQL environments 
 ### Implementation Status
 
 #### ✅ **Fully Implemented**
-- ** Authentication System**: Login screen with hardcoded users (admin/user roles)
+- ** Authentication System**: Login screen with hardcoded users (admin)
 - ** Environment Switching**: Dev/test environment selector
 - ** Table Management**: Table listing and dynamic table detection
 - ** Data Viewing**: Data grid with all table data displayed
@@ -73,15 +73,14 @@ Build a web-based admin panel to interact with multiple PostgreSQL environments 
 - ** Change Application**: Approval logic exists but INSERT/DELETE operations missing
 
 #### ❌ **Not Implemented (Due to Time Constraints)**
+- ** Authentication System**: Login screen with hardcoded users (users)
 - ** Data Filtering**: No search/filter functionality in data grid
 - ** Role-based Access**: Different permissions for admin vs user
 - ** Data Sorting**: No column sorting capabilities
-- ** Predefined Queries**: No query runner interface
 - ** Admin Dashboard**: No web interface for pending change review
 - ** Change Diffs**: No before/after comparison display
 - ** UI Feedback**: No toast notifications or success/failure messages
 - ** Table Snapshots**: No backup of affected tables on approval
-- ** Bulk Operations**: No mass approve/reject functionality
 
 ## 🏗️ System Architecture
 

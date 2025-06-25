@@ -105,15 +105,14 @@ The metadata database contains these default user accounts:
 | Username | Password | Role | Purpose |
 |----------|----------|------|---------|
 | `admin` | `admin123` | admin | Full system access, can approve changes |
-| `user1` | `user123` | user | Can view and edit tables, submit changes |
-| `user2` | `user456` | user | Can view and edit tables, submit changes |
+
 
 *Note: Check `metadata_seed.sql` for the complete list of users and their details.*
 
 ## 📊 Sample Data Overview
 
 ### Metadata Database
-- **User roles**: admin, user
+- **User roles**: admin/viewer
 - **Default users**: Admin and regular users with authentication
 - **Pending changes**: Sample change requests for demonstration
 - **Snapshots**: Table backup functionality

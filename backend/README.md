@@ -159,21 +159,6 @@ The API will be available at:
   - Approve/reject pending changes
   - Access admin-only endpoints
 
-#### Regular Users
-- **Username**: `user1` | **Password**: `user123`
-- **Username**: `user2` | **Password**: `user456`
-- **Role**: `user`
-- **Permissions**:
-  - View tables
-  - Submit change requests
-  - Cannot approve changes
-
-### Adding New Users
-```sql
--- Connect to metadata database
-INSERT INTO users (username, password, role_id) VALUES 
-    ('newuser', 'password123', 2);  -- role_id 2 = user, 1 = admin
-```
 
 ## 🏗️ Architecture Details
 

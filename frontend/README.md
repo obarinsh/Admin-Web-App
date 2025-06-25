@@ -75,7 +75,7 @@ npm run lint     # Run ESLint for code quality
 | Role | Username | Password | What You Can Do |
 |------|----------|----------|-----------------|
 | **Admin** | `admin` | `admin123` | • View all tables<br>• Edit data<br>• Submit changes<br>• Access admin features |
-| **User** | `Alice` | `alice@dev.com` | • View tables<br>• Edit data<br>• Submit change requests |
+| **User** | - functionality not added yet
 
 
 ## 🎨 User Interface Overview
