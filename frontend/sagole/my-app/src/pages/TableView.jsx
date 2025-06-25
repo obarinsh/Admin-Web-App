@@ -3,13 +3,16 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { Database, Loader2, AlertCircle, FileText, ArrowLeft } from 'lucide-react'
 import '../css/TableView.css'
 
-function TableView() {
+function TableView({ user }) {
     const { env, table } = useParams()  // This extracts from /table-view/:env/:table
     const navigate = useNavigate()
     const [tableData, setTableData] = useState([])
     const [columns, setColumns] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
+    const [editingCell, setEditingCell] = useState({ row: null, col: null })
+    const [originalValue, setOriginalValue] = useState(null)
+    const [selectedRows, setSelectedRows] = useState([])
 
     const fetchTableData = async (environment, tableName) => {
         setLoading(true)
@@ -33,6 +36,95 @@ function TableView() {
         } finally {
             setLoading(false)
         }
+    }
+
+    async function submitPendingChange(rowIndex, columnIndex, oldValue, newValue) {
+        try {
+            // Check if this is a new row (empty first column means no database ID)
+            const rowId = tableData[rowIndex][0]
+
+            if (!rowId || rowId === "") {
+                // This is a new row - we'll need to handle INSERT operations
+                console.log('🆕 New row edit detected - INSERT operation needed')
+                console.log('Row data:', tableData[rowIndex])
+                // TODO: Implement INSERT pending change logic
+                return
+            }
+
+            const requestData = {
+                "env": env,
+                "table_name": table,
+                "row_id": String(rowId),
+                "column": columns[columnIndex],
+                "old_value": oldValue,
+                "new_value": newValue,
+                "user_id": user.id
+            }
+
+            const response = await fetch('http://localhost:8000/api/pending-change', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestData),
+            })
+            if (!response.ok) {
+                throw new Error('Failed to post pending changes')
+            }
+            const data = await response.json()
+
+        } catch (error) {
+            console.error('TableView: Error submitting pending changes:', error)
+        }
+    }
+
+    const handleEditComplete = async (rowIndex, cellIndex, newValue, originalValue) => {
+        // Close the editing state first
+        setEditingCell({ row: null, col: null })
+        setOriginalValue(null)
+
+        // If value actually changed, submit the pending change
+        if (newValue !== originalValue) {
+            await submitPendingChange(rowIndex, cellIndex, originalValue, newValue)
+        }
+    }
+
+    const handleCellChange = (rowIndex, cellIndex, value) => {
+        const updatedData = [...tableData]
+        updatedData[rowIndex][cellIndex] = value
+        setTableData(updatedData)
+    }
+
+    const handleRowSelection = (rowIndex) => {
+        setSelectedRows(prev => {
+            // If row is already selected, remove it
+            if (prev.includes(rowIndex)) {
+                return prev.filter(index => index !== rowIndex)
+            }
+            // Otherwise, add it to selection
+            return [...prev, rowIndex]
+        })
+    }
+
+    const handleSelectAll = () => {
+        if (selectedRows.length === tableData.length) {
+            setSelectedRows([])
+        } else {
+            setSelectedRows(tableData.map((_, index) => index))
+        }
+    }
+
+    const handleDeleteSelected = () => {
+        const rowsToDelete = selectedRows.map(rowIndex => tableData[rowIndex][0])
+        console.log('🗑️ Rows to delete:', rowsToDelete)
+    }
+
+    const handleAddNewRow = () => {
+        // Create a new empty row with the same number of columns as existing data
+        const newRow = new Array(columns.length).fill("")
+
+        // Add the new row to the end of tableData
+        setTableData(prev => [...prev, newRow])
+
+        console.log('🆕 Added new empty row')
     }
 
     useEffect(() => {
@@ -71,15 +163,14 @@ function TableView() {
                         Environment: <strong>{env}</strong>
                     </p>
                 </div>
-                <button
-                    onClick={() => navigate('/datacontent')}
-                    className="table-view-back-button"
-                >
-                    <ArrowLeft size={16} />
-                    Back to Dashboard
-                </button>
             </div>
-
+            <button
+                onClick={() => navigate('/datacontent')}
+                className="table-view-back-button"
+            >
+                <ArrowLeft size={14} />
+                Back
+            </button>
             {/* Content */}
             <div className="table-view-content">
                 {loading && (
@@ -107,12 +198,26 @@ function TableView() {
                     <div>
                         <div className="table-view-data-header">
                             Showing {tableData.length} rows
+                            <button
+                                onClick={handleAddNewRow}
+                            >Add New</button>
+                            <button
+                                onClick={handleDeleteSelected}
+                                disabled={selectedRows.length === 0}
+                            >Delete selected</button>
                         </div>
 
                         <div className="table-view-table-container">
                             <table className="table-view-table">
                                 <thead>
                                     <tr>
+                                        <th>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedRows.length === tableData.length && tableData.length > 0}
+                                                onChange={handleSelectAll}
+                                            />
+                                        </th>
                                         {columns.map((column, index) => (
                                             <th key={index}>
                                                 {column}
@@ -123,9 +228,34 @@ function TableView() {
                                 <tbody>
                                     {tableData.map((row, rowIndex) => (
                                         <tr key={rowIndex}>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedRows.includes(rowIndex)}
+                                                    onChange={() => handleRowSelection(rowIndex)}
+                                                />
+                                            </td>
                                             {row.map((cell, cellIndex) => (
-                                                <td key={cellIndex}>
-                                                    {cell !== null ? String(cell) : <em className="null-value">null</em>}
+                                                <td
+                                                    key={cellIndex}
+                                                    onClick={() => {
+                                                        setEditingCell({ row: rowIndex, col: cellIndex })
+                                                        setOriginalValue(cell)
+                                                    }}
+                                                >
+                                                    {editingCell.row === rowIndex && editingCell.col === cellIndex ? (
+                                                        <input
+                                                            value={cell || ''}
+                                                            onChange={(e) => handleCellChange(rowIndex, cellIndex, e.target.value)}
+                                                            onBlur={(e) => {
+                                                                const newValue = e.target.value
+                                                                handleEditComplete(rowIndex, cellIndex, newValue, originalValue)
+                                                            }}
+                                                            autoFocus
+                                                        />
+                                                    ) : (
+                                                        cell !== null ? String(cell) : <em className="null-value">null</em>
+                                                    )}
                                                 </td>
                                             ))}
                                         </tr>
@@ -136,7 +266,7 @@ function TableView() {
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     )
 }
 

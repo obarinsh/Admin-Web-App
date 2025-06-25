@@ -84,7 +84,7 @@ function TablesList({ selectedEnv }) {
     return (
         <div className="tables-list-container">
             <h4 className="tables-list-title">
-                Tables in<bold>{selectedEnv}</bold>environment
+                <bold>{selectedEnv}</bold>environment
             </h4>
 
             <div className="tables-list-grid">

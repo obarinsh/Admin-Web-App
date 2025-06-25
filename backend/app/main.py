@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routes.login import setup_login_routes
 from routes.tables import show_tables_routes
+from routes.pending_changes import pending_changes_routes
 load_dotenv()
 
 # --- Initialize FastAPI ---
@@ -45,6 +46,7 @@ env_connections = {
 # --- Include Routes ---
 app.include_router(setup_login_routes(metadata_conn))
 app.include_router(show_tables_routes(env_connections))
+app.include_router(pending_changes_routes(metadata_conn, env_connections))
 # --- Test Route ---
 
 

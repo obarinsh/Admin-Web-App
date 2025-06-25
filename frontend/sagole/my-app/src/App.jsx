@@ -66,7 +66,7 @@ function App() {
         />
         <Route
           path="/table-view/:env/:table"
-          element={user ? <TableView /> : <Navigate to="/login" />}
+          element={user ? <TableView user={user} /> : <Navigate to="/login" />}
         />
       </Routes>
     </Router>
